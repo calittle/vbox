@@ -69,15 +69,7 @@ function mainmenu(){
         #get state of selected VM
         STATE=$(VBoxManage showvminfo $VMNAME --machinereadable | grep 'VMState=' | cut -d '"' -f2)
 
-        dialog --clear  --backtitle "VirtualBox Command Menu" --title "[ VM Control Panel: Main Menu  ]" --menu "You can use the UP/DOWN arrow keys, the first \n letter of the choice as a hot key, or the \n number keys 1-9 to choose an option.\n\n\
-                Selected VM [${VMNAME}] is ${STATE}.\n\
-                Choose the TASK" 25 55 10 \
-                List "Displays a list of known VMs" \
-                Start "Start a VM (Power on/Restore)" \
-                Kill "Stop a VM (Power off)" \
-                Reset "Reset a VM (Power cycle)" \
-                Quiesce "Hibernate a VM (Sleep)" \
-                Exit "Exit to the shell" 2>"${INPUT}"
+        dialog --clear  --backtitle "VirtualBox Command Menu" --title "[ VM Control Panel: Main Menu  ]" --menu "Selected VM [${VMNAME}] is ${STATE}.\nChoose the TASK" 25 55 10 List "Displays a list of known VMs" Start "Start a VM (Power on/Restore)" Kill "Stop a VM (Power off)" Reset "Reset a VM (Power cycle)" Quiesce "Hibernate a VM (Sleep)" Exit "Exit to the shell" 2>"${INPUT}"
 	
 	menuitem=$(<"${INPUT}")
 
