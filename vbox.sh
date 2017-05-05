@@ -10,7 +10,16 @@ OUTPUT=/tmp/output.sh.$$
 OUTPUT1=/tmp/output1.sh.$$
 
 trap "rm $OUTPUT1; rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
-
+function bug(){
+echo "        _ _ _       _    ___  ";
+echo "       | (_) |     | |  |__ \ ";
+echo "   __ _| |_| |_ ___| |__   ) |";
+echo "  / _\` | | | __/ __| '_ \ / / ";
+echo " | (_| | | | || (__| | | |_|  ";
+echo "  \__, |_|_|\__\___|_| |_(_)  ";
+echo "   __/ |                      ";
+echo "  |___/                       ";
+}
 function killvm(){
         if [ $STATE != "running" ]
           then
@@ -43,7 +52,8 @@ function startvm(){
                 dialog --title "Warning" --msgbox "${VMNAME} is running; cannot start." 5 55
           else
 	 	dialog --title "Response" --infobox "${VMNAME} is starting." 5 55
-                nohup VBoxHeadless --startvm $VMNAME >/dev/nul 2>i&1 &
+                #nohup VBoxHeadless --startvm $VMNAME 2>&1 &
+		VBoxManage startvm "$VMNAME" --type headless
         fi
 }
 function sleepvm(){
@@ -93,7 +103,7 @@ function listvm(){
         dialog --clear --backtitle "VirtualBox Command Menu" --title "[ VM Control Panel: List VMs ]" --menu "Select a VM to control" 25 55 10 `paste -d ' ' $OUTPUT $OUTPUT1` 2>"${INPUT}"
         VMNAME=$(<"${INPUT}")
 }
-
+bug;
 while true
 do
         mainmenu;
