@@ -79,7 +79,7 @@ function mainmenu(){
         #get state of selected VM
         STATE=$(VBoxManage showvminfo $VMNAME --machinereadable | grep 'VMState=' | cut -d '"' -f2)
 
-        dialog --clear  --backtitle "VirtualBox Command Menu" --title "[ VM Control Panel: Main Menu  ]" --menu "Selected VM [${VMNAME}] is ${STATE}.\nChoose the TASK" 25 55 10 List "Displays a list of known VMs" Start "Start a VM (Power on/Restore)" Kill "Stop a VM (Power off)" Reset "Reset a VM (Power cycle)" Quiesce "Hibernate a VM (Sleep)" Exit "Exit to the shell" 2>"${INPUT}"
+        dialog --clear  --backtitle "VirtualBox Command Menu" --title "[ VM Control Panel: Main Menu  ]" --menu "Selected VM [${VMNAME}] is ${STATE}.\nChoose the TASK" 25 55 10 List "Displays a list of known VMs" Start "Start a VM (Power on/Restore)" Kill "Stop a VM (Power off)" Reset "Reset a VM (Power cycle)" Quiesce "Hibernate a VM (Sleep)" Show "Show Running VMs" Exit "Exit to the shell" 2>"${INPUT}"
 	
 	menuitem=$(<"${INPUT}")
 
@@ -89,6 +89,7 @@ function mainmenu(){
             Kill) killvm;;
             Reset) resetvm;;
             Quiesce) sleepvm;;
+	    Show) listvmsrunning;;
             Exit) break;;
             *) break;;
         esac
@@ -96,6 +97,13 @@ function mainmenu(){
 #
 # List VM
 #
+function listvmsrunning(){
+	VBoxManage list runningvms | cut -d '{' -f1 > $OUTPUT1
+	VBoxManage list runningvms | cut -d '"' -f2 > $OUTPUT
+        dialog --clear --backtitle "VirtualBox Command Menu" --title "[ VM Control Panel: List RUNNING VMs ]" --menu "Select a VM to control" 25 55 10 `paste -d ' ' $OUTPUT $OUTPUT1` 2>"${INPUT}"
+        VMNAME=$(<"${INPUT}")
+	
+}
 function listvm(){
         #VBoxManage list vms > $OUTPUT
         VBoxManage list vms | cut -d '{' -f1 > $OUTPUT1
